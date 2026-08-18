@@ -31,9 +31,16 @@ def init_db():
 conn = init_db()
 
 # --- AUTENTICAÇÃO DA API ---
-api_key = os.getenv("OPENAI_API_KEY") or st.text_input("🔑 Chave API OpenAI:", type="password")
-if not api_key:
-    st.stop()
+# --- CONFIGURAÇÃO DA API ---
+try:
+    # Tenta ler dos secrets do Streamlit Cloud primeiro
+    api_key = st.secrets["OPENAI_API_KEY"]
+except:
+    # Se não encontrar, pede via input
+    api_key = st.text_input("🔑 Chave API OpenAI:", type="password")
+    if not api_key:
+        st.stop()
+
 client = OpenAI(api_key=api_key)
 
 # --- FUNÇÕES AUXILIARES ---
